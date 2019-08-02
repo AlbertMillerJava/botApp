@@ -51,7 +51,7 @@ public class CreateTransactions {
                 System.out.println(simulationAccount.getAcountStatus());
                 while (simulationAccount.getAcountStatus().get(marketTemp) > 0) {
 
-                    double rate = getRate(market.getCurrency(), "Last");
+                    double rate = getRate(market.getName(), "Last");
                     System.out.println(rate);
 
                     if (rate > 1.005 * buyPrice || rate < 0.98 * buyPrice) {
@@ -100,13 +100,13 @@ public class CreateTransactions {
     }
 
 
-    public double getRate(String currency, String type) {
+    public double getRate(String market, String type) {
 
         double rate = 0.0;
         String json = "";
         try {
-            System.out.println(currency);
-            String url1 = "https://api.bittrex.com/api/v1.1/public/getticker?market=" + currency;
+
+            String url1 = "https://api.bittrex.com/api/v1.1/public/getticker?market=" + market;
 
             URL url = new URL(url1);
 
@@ -119,20 +119,11 @@ public class CreateTransactions {
             json = bufferedReader.readLine();
             JSONObject jsonObject = new JSONObject(json);
             System.out.println(json);
-            rate = Double.parseDouble(jsonObject.getString(type));
+            rate = jsonObject.getJSONObject("result").getDouble(type);
 
-        } catch (ConnectException c) {
-            c.printStackTrace();
-            getRate(currency, type);
-            try {
-                Thread.sleep(5000);
-
-            } catch (InterruptedException x) {
-                x.printStackTrace();
-            }
         } catch (IOException e) {
             e.printStackTrace();
-            getRate(currency, type);
+            getRate(market, type);
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException x) {
