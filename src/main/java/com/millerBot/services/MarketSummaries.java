@@ -39,7 +39,7 @@ public class MarketSummaries {
             System.out.println("Check your internet connection");
             try {
                 getMarketSummary();
-                Thread.sleep(1000);
+                Thread.sleep(5000);
             } catch (InterruptedException x) {
                 x.printStackTrace();
             }

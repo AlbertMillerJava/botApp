@@ -1,12 +1,8 @@
 package com.millerBot.services;
-
 import com.millerBot.models.MapContainer;
 import com.millerBot.models.Market;
-
-import org.omg.CORBA.INTERNAL;
-import org.omg.CORBA.MARSHAL;
-
 import java.util.*;
+
 
 public class FinalMarket {
 
@@ -35,7 +31,7 @@ public class FinalMarket {
             int step = 0;
             while (chosenPair.length() < 2 || longPricesMap.getPricesMap().get(marketList.get(0)).getPricesList().size()<20) {
                 step++;
-                Thread.sleep(1000);
+                Thread.sleep(5000);
 
                 longPricesMap.addingPriceToMap();
                 shortPricesMap.addingPriceToMap();
@@ -44,7 +40,7 @@ public class FinalMarket {
                 for (Market market : marketList) {
 
                     trendMap.put(market, trendList);
-
+                    System.out.println(market.getName() + longPricesMap.getPricesMap().get(market).averaging() + " <--To dluga srednia "+ shortPricesMap.getPricesMap().get(market).averaging());
                     if (shortPricesMap.getPricesMap().get(market).averaging() < longPricesMap.getPricesMap().get(market).averaging()) {
 
                         trend = false;
@@ -55,7 +51,7 @@ public class FinalMarket {
                         trend = true;
                         trendMap.get(market).add(trend);
 
-                    } else if (shortPricesMap.getPricesMap().get(market).averaging() > longPricesMap.getPricesMap().get(market).averaging() && trendMap.get(market).get(step - 1).equals(false) &&
+                    } else if (shortPricesMap.getPricesMap().get(market).averaging() > (longPricesMap.getPricesMap().get(market).averaging())*1.00015 && trendMap.get(market).get(step - 1).equals(false) &&
                             longPricesMap.getPricesMap().get(market).getPricesList().size() >= 20) {
 
                         trend = true;

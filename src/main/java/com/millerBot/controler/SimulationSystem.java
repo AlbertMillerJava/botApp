@@ -22,13 +22,12 @@ public class SimulationSystem {
     }
 
     public void mainLoop(){
-
-        List<Market> selectedMarketList = marketSummaries.createSelectedMarketsList(40,150);
-        MapContainer longPricesMap = new MapContainer(21,selectedMarketList);
-        MapContainer shortPricesMap = new MapContainer(5,selectedMarketList);
-        Market selectedMarket = finalMarket.getFinalMarket(selectedMarketList,longPricesMap,shortPricesMap);
-
-        createTransactions.runSimulation(selectedMarket);
-
+        for(int i = 0 ; i<100 ;i++){
+            List<Market> selectedMarketList = marketSummaries.createSelectedMarketsList(20,150);
+            MapContainer longPricesMap = new MapContainer(21,selectedMarketList);
+            MapContainer shortPricesMap = new MapContainer(5,selectedMarketList);
+            Market selectedMarket = finalMarket.getFinalMarket(selectedMarketList,longPricesMap,shortPricesMap);
+            createTransactions.oneLoop(selectedMarket);
+        }
     }
 }
