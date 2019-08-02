@@ -33,7 +33,7 @@ public class FinalMarket {
             Map<Market, List> trendMap = new HashMap<>();
 
             int step = 0;
-            while (chosenPair.length() < 2) {
+            while (chosenPair.length() < 2 || longPricesMap.getPricesMap().get(marketList.get(0)).getPricesList().size()<20) {
                 step++;
                 Thread.sleep(1000);
 
@@ -75,7 +75,9 @@ public class FinalMarket {
             x.printStackTrace();
         }
         Market marketSelected = oneMarket.get(0);
-        System.out.println(marketSelected.getName());
+        if (!oneMarket.isEmpty()){
+            return marketSelected;
+        }
         return marketSelected;
     }
 }
