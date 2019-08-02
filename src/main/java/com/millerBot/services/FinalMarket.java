@@ -1,0 +1,81 @@
+package com.millerBot.services;
+
+import com.millerBot.models.MapContainer;
+import com.millerBot.models.Market;
+
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.MARSHAL;
+
+import java.util.*;
+
+public class FinalMarket {
+
+    MarketSummaries marketSummaries;
+
+    public FinalMarket(MarketSummaries marketSummaries) {
+        this.marketSummaries = marketSummaries;
+
+    }
+
+
+    public Market getFinalMarket(List<Market> marketList,MapContainer longPricesMap, MapContainer shortPricesMap) {
+        List<Market> oneMarket = new ArrayList<>();
+        String chosenPair = "";
+        try {
+
+            shortPricesMap.fillMap();
+            longPricesMap.fillMap();
+            boolean trend;
+
+
+            List<Boolean> trendList = new ArrayList<>();
+
+            Map<Market, List> trendMap = new HashMap<>();
+
+            int step = 0;
+            while (chosenPair.length() < 2) {
+                step++;
+                Thread.sleep(1000);
+
+                longPricesMap.addingPriceToMap();
+                shortPricesMap.addingPriceToMap();
+
+
+                for (Market market : marketList) {
+
+                    trendMap.put(market, trendList);
+
+                    if (shortPricesMap.getPricesMap().get(market).averaging() < longPricesMap.getPricesMap().get(market).averaging()) {
+
+                        trend = false;
+                        trendMap.get(market).add(trend);
+
+                    } else if (shortPricesMap.getPricesMap().get(market).averaging() == longPricesMap.getPricesMap().get(market).averaging()) {
+
+                        trend = true;
+                        trendMap.get(market).add(trend);
+
+                    } else if (shortPricesMap.getPricesMap().get(market).averaging() > longPricesMap.getPricesMap().get(market).averaging() && trendMap.get(market).get(step - 1).equals(false) &&
+                            longPricesMap.getPricesMap().get(market).getPricesList().size() >= 20) {
+
+                        trend = true;
+                        trendMap.get(market).add(trend);
+                        chosenPair = market.getName();
+
+                        oneMarket.add(market);
+
+                    } else {
+                        trend = false;
+                        trendMap.get(market).add(trend);
+                    }
+                }
+            }
+
+        } catch (InterruptedException | NullPointerException x) {
+            x.printStackTrace();
+        }
+        Market marketSelected = oneMarket.get(0);
+        System.out.println(marketSelected.getName());
+        return marketSelected;
+    }
+}
