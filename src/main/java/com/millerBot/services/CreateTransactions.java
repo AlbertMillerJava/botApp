@@ -59,51 +59,6 @@ public class CreateTransactions {
             }
         }
     }
-//    public List<Transaction> runSimulation(Market market) {
-//
-//        List<Transaction> transactions = new ArrayList<>();
-//
-//
-//
-//            String marketTemp = market.getName().replace("BTC-", "");
-//
-//            if (simulationAccount.getAcountStatus().get("BTC") > 0) {
-//
-//                Transaction transaction = createBuyTransaction(market);
-//                transactions.add(transaction);
-//                double buyPrice = transaction.getRate();
-//                simulationAccount.getAcountStatus().replace("BTC", 0.0);
-//                simulationAccount.getAcountStatus().replace(marketTemp, transaction.getQuantity() * 0.9975);
-//
-//                System.out.println(transaction);
-//                System.out.println(simulationAccount.getAcountStatus());
-//                while (simulationAccount.getAcountStatus().get(marketTemp) > 0) {
-//
-//                    double rate = getRate(market.getName(), "Last");
-//                    System.out.println(rate);
-//
-//                    if (rate > 1.005 * buyPrice || rate < 0.98 * buyPrice) {
-//                        Transaction transaction1 = createSellTransaction(market);
-//                        transactions.add(transaction1);
-//                        System.out.println(transaction1);
-//                        simulationAccount.getAcountStatus().replace(marketTemp, 0.0);
-//
-//                        simulationAccount.getAcountStatus().replace("BTC", transaction1.getQuantity() * 0.9975);
-//                        System.out.println(simulationAccount.getAcountStatus());
-//
-//                    }
-//                    try {
-//                        Thread.sleep(12000);
-//
-//                    } catch (InterruptedException c) {
-//                        c.printStackTrace();
-//                    }
-//
-//                }
-//            }
-//        }
-//        return transactions;
-//    }
 
     public Transaction createBuyTransaction(Market market) {
         String type = "Bid";
