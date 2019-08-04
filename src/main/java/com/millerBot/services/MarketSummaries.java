@@ -17,17 +17,12 @@ import java.util.stream.Collectors;
 public class MarketSummaries {
     private List<Market> selectedMarketsList;
 
-
-
     public MarketSummaries(){
         this.selectedMarketsList  =new ArrayList<>();
     }
 
-
-
     public String getMarketSummary() {
         String json = "";
-
         try {
             URL url = new URL("https://api.bittrex.com/api/v1.1//public/getmarketsummaries");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
