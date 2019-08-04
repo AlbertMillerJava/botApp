@@ -18,36 +18,24 @@ public class FinalMarket {
         List<Market> oneMarket = new ArrayList<>();
         String chosenPair = "";
         try {
-
             shortPricesMap.fillMap();
             longPricesMap.fillMap();
             boolean trend;
-
-
             List<Boolean> trendList = new ArrayList<>();
-
             Map<Market, List> trendMap = new HashMap<>();
-
             int step = 0;
             while (chosenPair.length() < 2 || longPricesMap.getPricesMap().get(marketList.get(0)).getPricesList().size()<20) {
                 step++;
                 Thread.sleep(5000);
-
                 longPricesMap.addingPriceToMap();
                 shortPricesMap.addingPriceToMap();
-
-
                 for (Market market : marketList) {
-
                     trendMap.put(market, trendList);
-                    System.out.println(market.getName() + longPricesMap.getPricesMap().get(market).averaging() + " <--To dluga srednia "+ shortPricesMap.getPricesMap().get(market).averaging());
                     if (shortPricesMap.getPricesMap().get(market).averaging() < longPricesMap.getPricesMap().get(market).averaging()) {
-
                         trend = false;
                         trendMap.get(market).add(trend);
 
                     } else if (shortPricesMap.getPricesMap().get(market).averaging() == longPricesMap.getPricesMap().get(market).averaging()) {
-
                         trend = true;
                         trendMap.get(market).add(trend);
 

@@ -77,28 +77,20 @@ public class CreateTransactions {
         return transaction;
     }
 
-
     public double getRate(String market, String type) {
 
         double rate = 0.0;
         String json = "";
         try {
-
             String url1 = "https://api.bittrex.com/api/v1.1/public/getticker?market=" + market;
-
             URL url = new URL(url1);
-
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
             InputStream inputStream = connection.getInputStream();
-
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
             json = bufferedReader.readLine();
             JSONObject jsonObject = new JSONObject(json);
             System.out.println(json);
             rate = jsonObject.getJSONObject("result").getDouble(type);
-
         } catch (IOException e) {
             e.printStackTrace();
             getRate(market, type);
@@ -107,7 +99,6 @@ public class CreateTransactions {
             } catch (InterruptedException x) {
                 x.printStackTrace();
             }
-
         }
         return rate;
     }
