@@ -23,6 +23,7 @@ public class SimulationSystem {
 
     public void mainLoop(){
         List<Market> selectedMarketList = marketSummaries.createSelectedMarketsList(20,150);
+
         for(int i = 0 ; i<100 ;i++){
 
             MapContainer longPricesMap = new MapContainer(21,selectedMarketList);
