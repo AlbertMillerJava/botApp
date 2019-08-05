@@ -41,17 +41,16 @@ public class CreateTransactions {
                 System.out.println(rate);
 
                 if (rate > 1.005 * buyPrice || rate < 0.98 * buyPrice) {
+
                     Transaction transaction1 = createSellTransaction(market);
                     System.out.println(transaction1);
                     simulationAccount.getAcountStatus().replace(marketTemp, 0.0);
-
                     simulationAccount.getAcountStatus().replace("BTC", transaction1.getQuantity() * 0.9975);
-                    System.out.println(simulationAccount.getAcountStatus());
-                    break;
+
+
                 }
                 try {
-                    Thread.sleep(12000);
-
+                    Thread.sleep(5000);
                 } catch (InterruptedException c) {
                     c.printStackTrace();
                 }
@@ -61,10 +60,13 @@ public class CreateTransactions {
     }
 
     public Transaction createBuyTransaction(Market market) {
+
+
         String type = "Bid";
         double rate = getRate(market.getName(), type);
         double quantity = simulationAccount.getAcountStatus().get("BTC") / rate;
         Transaction transaction = new Transaction(market.getName(), rate, quantity, TypeOfTransaction.BUY);
+        System.out.println(simulationAccount.getAcountStatus());
         return transaction;
     }
 
@@ -74,24 +76,32 @@ public class CreateTransactions {
         String marketTemp = market.getCurrency().replaceAll("BTC-", "");
         double quantity = simulationAccount.getAcountStatus().get(marketTemp) * rate;
         Transaction transaction = new Transaction(market.getCurrency(), rate, quantity, TypeOfTransaction.SELL);
+        System.out.println(simulationAccount.getAcountStatus());
         return transaction;
     }
+
 
     public double getRate(String market, String type) {
 
         double rate = 0.0;
         String json = "";
+        String url1 = "https://api.bittrex.com/api/v1.1/public/getticker?market=" + market;
         try {
-            String url1 = "https://api.bittrex.com/api/v1.1/public/getticker?market=" + market;
+
             URL url = new URL(url1);
+
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
             InputStream inputStream = connection.getInputStream();
+
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
             json = bufferedReader.readLine();
             JSONObject jsonObject = new JSONObject(json);
             System.out.println(json);
             rate = jsonObject.getJSONObject("result").getDouble(type);
-        } catch (IOException e) {
+            Thread.sleep(5000);
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             getRate(market, type);
             try {

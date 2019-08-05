@@ -31,6 +31,7 @@ public class FinalMarket {
                 shortPricesMap.addingPriceToMap();
                 for (Market market : marketList) {
                     trendMap.put(market, trendList);
+
                     if (shortPricesMap.getPricesMap().get(market).averaging() < longPricesMap.getPricesMap().get(market).averaging()) {
                         trend = false;
                         trendMap.get(market).add(trend);
