@@ -1,4 +1,5 @@
-package com.millerBot.models;
+package com.millerBot.models.utils;
+import com.millerBot.models.Market;
 import com.millerBot.services.MarketSummaries;
 import org.json.JSONArray;
 import org.json.JSONObject;

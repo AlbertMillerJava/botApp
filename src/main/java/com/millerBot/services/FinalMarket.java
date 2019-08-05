@@ -1,5 +1,5 @@
 package com.millerBot.services;
-import com.millerBot.models.MapContainer;
+import com.millerBot.models.utils.MapContainer;
 import com.millerBot.models.Market;
 import java.util.*;
 

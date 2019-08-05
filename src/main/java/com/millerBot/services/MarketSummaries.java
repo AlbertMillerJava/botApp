@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MarketSummaries {
-
     private List<Market> selectedMarketsList;
 
 

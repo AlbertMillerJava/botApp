@@ -1,5 +1,6 @@
 package com.millerBot.models;
 
+import com.millerBot.models.Market;
 import com.millerBot.services.MarketSummaries;
 
 import java.util.HashMap;
