@@ -1,12 +1,8 @@
 package com.millerBot.services;
-
 import com.millerBot.models.MapContainer;
 import com.millerBot.models.Market;
-
-import org.omg.CORBA.INTERNAL;
-import org.omg.CORBA.MARSHAL;
-
 import java.util.*;
+
 
 public class FinalMarket {
 
@@ -22,40 +18,29 @@ public class FinalMarket {
         List<Market> oneMarket = new ArrayList<>();
         String chosenPair = "";
         try {
-
             shortPricesMap.fillMap();
             longPricesMap.fillMap();
             boolean trend;
-
-
             List<Boolean> trendList = new ArrayList<>();
-
             Map<Market, List> trendMap = new HashMap<>();
-
             int step = 0;
-            while (chosenPair.length() < 2) {
+            while (chosenPair.length() < 2 || longPricesMap.getPricesMap().get(marketList.get(0)).getPricesList().size()<20) {
                 step++;
-                Thread.sleep(1000);
-
+                Thread.sleep(5000);
                 longPricesMap.addingPriceToMap();
                 shortPricesMap.addingPriceToMap();
-
-
                 for (Market market : marketList) {
-
                     trendMap.put(market, trendList);
 
                     if (shortPricesMap.getPricesMap().get(market).averaging() < longPricesMap.getPricesMap().get(market).averaging()) {
-
                         trend = false;
                         trendMap.get(market).add(trend);
 
                     } else if (shortPricesMap.getPricesMap().get(market).averaging() == longPricesMap.getPricesMap().get(market).averaging()) {
-
                         trend = true;
                         trendMap.get(market).add(trend);
 
-                    } else if (shortPricesMap.getPricesMap().get(market).averaging() > longPricesMap.getPricesMap().get(market).averaging() && trendMap.get(market).get(step - 1).equals(false) &&
+                    } else if (shortPricesMap.getPricesMap().get(market).averaging() > (longPricesMap.getPricesMap().get(market).averaging())*1.00015 && trendMap.get(market).get(step - 1).equals(false) &&
                             longPricesMap.getPricesMap().get(market).getPricesList().size() >= 20) {
 
                         trend = true;
@@ -75,7 +60,9 @@ public class FinalMarket {
             x.printStackTrace();
         }
         Market marketSelected = oneMarket.get(0);
-        System.out.println(marketSelected.getName());
+        if (!oneMarket.isEmpty()){
+            return marketSelected;
+        }
         return marketSelected;
     }
 }

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MarketSummaries {
+
     private List<Market> selectedMarketsList;
 
 
@@ -22,26 +23,24 @@ public class MarketSummaries {
     public MarketSummaries(){
         this.selectedMarketsList  =new ArrayList<>();
     }
-
-
-
     public String getMarketSummary() {
         String json = "";
-
-        try {
-            URL url = new URL("https://api.bittrex.com/api/v1.1//public/getmarketsummaries");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            InputStream inputStream = connection.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            json = bufferedReader.readLine();
-
-        } catch (IOException e) {
-            System.out.println("Check your internet connection");
+        while(json.length()<5){
             try {
-                getMarketSummary();
-                Thread.sleep(1000);
-            } catch (InterruptedException x) {
-                x.printStackTrace();
+                URL url = new URL("https://api.bittrex.com/api/v1.1//public/getmarketsummaries");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                InputStream inputStream = connection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                json = bufferedReader.readLine();
+
+            } catch (IOException e) {
+                System.out.println("Check your internet connection");
+                try {
+                    getMarketSummary();
+                    Thread.sleep(5000);
+                } catch (InterruptedException x) {
+                    x.printStackTrace();
+                }
             }
         }
         return json;

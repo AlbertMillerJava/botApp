@@ -12,15 +12,15 @@ public class SimulationAccount {
         this.acountStatus = new HashMap<>();
     }
 
-    public Map<String,Double> fillingMap(){
+    public void fillingMap(){
         MarketSummaries marketSummaries = new MarketSummaries();
-        for (Market market : marketSummaries.createSelectedMarketsList(40,150)){
+        for (Market market : marketSummaries.createSelectedMarketsList(20,150)){
             String marketTemp = market.getCurrency();
             acountStatus.put(marketTemp,0.0);
 
         }
-        acountStatus.put("BTC",0.1);
-        return acountStatus;
+        acountStatus.put("BTC",0.1011);
+
     }
 
 

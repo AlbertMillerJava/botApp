@@ -1,13 +1,12 @@
 package com.millerBot.models;
-
 import com.millerBot.services.MarketSummaries;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 
 public class MapContainer {
 
@@ -21,19 +20,16 @@ public class MapContainer {
         this.pricesMap = new HashMap<>();
     }
 
-
     public void fillMap() {
-
         for (Market market :selectedMarketList) {
             pricesMap.put(market, new MovingAverage(limit));
         }
-
     }
+
 
     public void addingPriceToMap() {
         String json = new MarketSummaries().getMarketSummary();
         double price = 0.0;
-
         JSONObject jsObject = new JSONObject(json);
         JSONArray array = jsObject.getJSONArray("result");
 

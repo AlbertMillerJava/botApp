@@ -27,68 +27,48 @@ public class CreateTransactions {
         this.finalMarket = finalMarket;
     }
 
+    public void oneLoop(Market market) {
+        String marketTemp = market.getName().replace("BTC-", "");
+        if (simulationAccount.getAcountStatus().get("BTC") > 0) {
+            Transaction transaction = createBuyTransaction(market);
+            double buyPrice = transaction.getRate();
+            simulationAccount.getAcountStatus().replace("BTC", 0.0);
+            simulationAccount.getAcountStatus().replace(marketTemp, transaction.getQuantity() * 0.9975);
+            System.out.println(transaction);
+            System.out.println(simulationAccount.getAcountStatus());
+            while (simulationAccount.getAcountStatus().get(marketTemp) > 0) {
+                double rate = getRate(market.getName(), "Last");
+                System.out.println(rate);
 
-    public List<Transaction> runSimulation(Market market) {
-        List<Transaction> transactions = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+                if (rate > 1.005 * buyPrice || rate < 0.98 * buyPrice) {
 
-            String marketTemp = market.getName().replace("BTC-", "");
+                    Transaction transaction1 = createSellTransaction(market);
+                    System.out.println(transaction1);
+                    simulationAccount.getAcountStatus().replace(marketTemp, 0.0);
+                    simulationAccount.getAcountStatus().replace("BTC", transaction1.getQuantity() * 0.9975);
 
-            if (simulationAccount.getAcountStatus().get("BTC") > 0) {
-
-                Transaction transaction = createBuyTransaction(market);
-
-                transactions.add(transaction);
-
-                double buyPrice = transaction.getRate();
-
-                simulationAccount.getAcountStatus().replace("BTC", 0.0);
-
-
-                simulationAccount.getAcountStatus().replace(marketTemp, transaction.getQuantity() * 0.9975);
-
-                System.out.println(transaction);
-                System.out.println(simulationAccount.getAcountStatus());
-                while (simulationAccount.getAcountStatus().get(marketTemp) > 0) {
-
-                    double rate = getRate(market.getCurrency(), "Last");
-                    System.out.println(rate);
-
-                    if (rate > 1.005 * buyPrice || rate < 0.98 * buyPrice) {
-                        Transaction transaction1 = createSellTransaction(market);
-                        transactions.add(transaction1);
-                        System.out.println(transaction1);
-                        simulationAccount.getAcountStatus().replace(marketTemp, 0.0);
-
-
-                        simulationAccount.getAcountStatus().replace("BTC", transaction1.getQuantity() * 0.9975);
-                        System.out.println(simulationAccount.getAcountStatus());
-                    }
-                    try {
-                        Thread.sleep(12000);
-
-                    } catch (InterruptedException c) {
-                        c.printStackTrace();
-                    }
 
                 }
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException c) {
+                    c.printStackTrace();
+                }
+
             }
         }
-        for (Transaction transaction : transactions) {
-            System.out.println(transaction.toString());
-        }
-        return transactions;
     }
 
-
     public Transaction createBuyTransaction(Market market) {
+
+
         String type = "Bid";
         double rate = getRate(market.getName(), type);
         double quantity = simulationAccount.getAcountStatus().get("BTC") / rate;
         Transaction transaction = new Transaction(market.getName(), rate, quantity, TypeOfTransaction.BUY);
+        System.out.println(simulationAccount.getAcountStatus());
         return transaction;
     }
-
 
     public Transaction createSellTransaction(Market market) {
         String type = "Last";
@@ -96,17 +76,17 @@ public class CreateTransactions {
         String marketTemp = market.getCurrency().replaceAll("BTC-", "");
         double quantity = simulationAccount.getAcountStatus().get(marketTemp) * rate;
         Transaction transaction = new Transaction(market.getCurrency(), rate, quantity, TypeOfTransaction.SELL);
+        System.out.println(simulationAccount.getAcountStatus());
         return transaction;
     }
 
 
-    public double getRate(String currency, String type) {
+    public double getRate(String market, String type) {
 
         double rate = 0.0;
         String json = "";
+        String url1 = "https://api.bittrex.com/api/v1.1/public/getticker?market=" + market;
         try {
-            System.out.println(currency);
-            String url1 = "https://api.bittrex.com/api/v1.1/public/getticker?market=" + currency;
 
             URL url = new URL(url1);
 
@@ -119,26 +99,16 @@ public class CreateTransactions {
             json = bufferedReader.readLine();
             JSONObject jsonObject = new JSONObject(json);
             System.out.println(json);
-            rate = Double.parseDouble(jsonObject.getString(type));
-
-        } catch (ConnectException c) {
-            c.printStackTrace();
-            getRate(currency, type);
-            try {
-                Thread.sleep(5000);
-
-            } catch (InterruptedException x) {
-                x.printStackTrace();
-            }
-        } catch (IOException e) {
+            rate = jsonObject.getJSONObject("result").getDouble(type);
+            Thread.sleep(5000);
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            getRate(currency, type);
+            getRate(market, type);
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException x) {
                 x.printStackTrace();
             }
-
         }
         return rate;
     }
