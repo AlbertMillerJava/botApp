@@ -28,7 +28,9 @@ public class SimulationSystem {
 
             MapContainer longPricesMap = new MapContainer(21,selectedMarketList);
             MapContainer shortPricesMap = new MapContainer(5,selectedMarketList);
-            Market selectedMarket = finalMarket.getFinalMarket(selectedMarketList,longPricesMap,shortPricesMap);
+            longPricesMap.fillMap();
+            shortPricesMap.fillMap();
+            Market selectedMarket = finalMarket.finalSelectedMarket(selectedMarketList,longPricesMap,shortPricesMap);
             createTransactions.oneLoop(selectedMarket);
         }
     }
