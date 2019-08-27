@@ -1,68 +1,75 @@
 package com.millerBot.services;
-import com.millerBot.models.MapContainer;
+
+import com.millerBot.models.utils.MapContainer;
 import com.millerBot.models.Market;
+
 import java.util.*;
 
 
 public class FinalMarket {
 
     MarketSummaries marketSummaries;
+    boolean trend = false;
+    String chosenPair = "";
+    Market selectedMarket = null;
+    List<Boolean> trendList = new ArrayList<>();
+    Map<Market, List> trendMap = new HashMap<>();
 
     public FinalMarket(MarketSummaries marketSummaries) {
         this.marketSummaries = marketSummaries;
+    }
 
+    public Market finalSelectedMarket(List<Market> marketList, MapContainer longPricesMap, MapContainer shortPricesMap) {
+        try {
+            int step = 0;
+            while (selectedMarket == null || step < 20) {
+                Thread.sleep(5000);
+                step++;
+                addPrices(longPricesMap, shortPricesMap);
+                selectedMarket = selectMarket(marketList, step, longPricesMap, shortPricesMap);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return selectedMarket;
     }
 
 
-    public Market getFinalMarket(List<Market> marketList,MapContainer longPricesMap, MapContainer shortPricesMap) {
-        List<Market> oneMarket = new ArrayList<>();
-        String chosenPair = "";
-        try {
-            shortPricesMap.fillMap();
-            longPricesMap.fillMap();
-            boolean trend;
-            List<Boolean> trendList = new ArrayList<>();
-            Map<Market, List> trendMap = new HashMap<>();
-            int step = 0;
-            while (chosenPair.length() < 2 || longPricesMap.getPricesMap().get(marketList.get(0)).getPricesList().size()<20) {
-                step++;
-                Thread.sleep(5000);
-                longPricesMap.addingPriceToMap();
-                shortPricesMap.addingPriceToMap();
-                for (Market market : marketList) {
-                    trendMap.put(market, trendList);
+    public void addPrices(MapContainer longPricesMap, MapContainer shortPricesMap) {
+        longPricesMap.addingPriceToMap();
+        shortPricesMap.addingPriceToMap();
+    }
 
-                    if (shortPricesMap.getPricesMap().get(market).averaging() < longPricesMap.getPricesMap().get(market).averaging()) {
-                        trend = false;
-                        trendMap.get(market).add(trend);
 
-                    } else if (shortPricesMap.getPricesMap().get(market).averaging() == longPricesMap.getPricesMap().get(market).averaging()) {
-                        trend = true;
-                        trendMap.get(market).add(trend);
+    public Market selectMarket(List<Market> marketList, int step, MapContainer longPricesMap, MapContainer shortPricesMap) {
 
-                    } else if (shortPricesMap.getPricesMap().get(market).averaging() > (longPricesMap.getPricesMap().get(market).averaging())*1.00015 && trendMap.get(market).get(step - 1).equals(false) &&
-                            longPricesMap.getPricesMap().get(market).getPricesList().size() >= 20) {
+        for (Market market : marketList) {
 
-                        trend = true;
-                        trendMap.get(market).add(trend);
-                        chosenPair = market.getName();
+            int length = longPricesMap.getPricesMap().get(market).getPricesList().size();
+            double shortAverage = shortPricesMap.getPricesMap().get(market).averaging();
+            double longAverage = longPricesMap.getPricesMap().get(market).averaging();
 
-                        oneMarket.add(market);
+            trendMap.put(market, trendList);
 
-                    } else {
-                        trend = false;
-                        trendMap.get(market).add(trend);
-                    }
-                }
+            if (shortAverage < longAverage) {
+                trend = false;
+                trendMap.get(market).add(trend);
+
+            } else if (shortAverage == longAverage) {
+                trend = true;
+                trendMap.get(market).add(trend);
+
+            } else if (shortAverage > longAverage ) {
+                trend = true;
+                trendMap.get(market).add(trend);
+                selectedMarket = market;
+
+            } else {
+                trend = false;
+                trendMap.get(market).add(trend);
             }
+        }
 
-        } catch (InterruptedException | NullPointerException x) {
-            x.printStackTrace();
-        }
-        Market marketSelected = oneMarket.get(0);
-        if (!oneMarket.isEmpty()){
-            return marketSelected;
-        }
-        return marketSelected;
+        return selectedMarket;
     }
 }

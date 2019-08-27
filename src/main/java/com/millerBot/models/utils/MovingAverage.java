@@ -1,4 +1,4 @@
-package com.millerBot.models;
+package com.millerBot.models.utils;
 
 import java.util.LinkedList;
 import java.util.Objects;

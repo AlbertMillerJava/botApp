@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MarketSummaries {
-
     private List<Market> selectedMarketsList;
 
 
@@ -34,10 +33,12 @@ public class MarketSummaries {
                 json = bufferedReader.readLine();
 
             } catch (IOException e) {
-                System.out.println("Check your internet connection");
+
                 try {
-                    getMarketSummary();
+
                     Thread.sleep(5000);
+                    System.out.println("Check your internet connection");
+                    getMarketSummary();
                 } catch (InterruptedException x) {
                     x.printStackTrace();
                 }
@@ -69,11 +70,13 @@ public class MarketSummaries {
     }
 
     public List<Market> createSelectedMarketsList (double volume, int buyOrders){
-        return selectedMarketsList = createFullMarketsList().stream()
-                .filter(market -> market.getName().startsWith("BTC-"))
+        selectedMarketsList = createFullMarketsList().stream()
+                .filter(market -> market.getName().startsWith("BTC"))
                 .filter(market -> market.getVolume()>volume)
                 .filter(market -> market.getOpenBuyOrders()> buyOrders)
                 .collect(Collectors.toList());
+
+        return  selectedMarketsList;
     }
 
     public List<Market> getSelectedMarketsList() {

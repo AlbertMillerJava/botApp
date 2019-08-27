@@ -1,6 +1,6 @@
-package com.millerBot.controler;
+package com.millerBot.controller;
 
-import com.millerBot.models.MapContainer;
+import com.millerBot.models.utils.MapContainer;
 import com.millerBot.models.Market;
 import com.millerBot.services.CreateTransactions;
 import com.millerBot.services.FinalMarket;
@@ -22,12 +22,15 @@ public class SimulationSystem {
     }
 
     public void mainLoop(){
-        List<Market> selectedMarketList = marketSummaries.createSelectedMarketsList(20,150);
+        List<Market> selectedMarketList = marketSummaries.createSelectedMarketsList(80,150);
+
         for(int i = 0 ; i<100 ;i++){
 
             MapContainer longPricesMap = new MapContainer(21,selectedMarketList);
             MapContainer shortPricesMap = new MapContainer(5,selectedMarketList);
-            Market selectedMarket = finalMarket.getFinalMarket(selectedMarketList,longPricesMap,shortPricesMap);
+            longPricesMap.fillMap();
+            shortPricesMap.fillMap();
+            Market selectedMarket = finalMarket.finalSelectedMarket(selectedMarketList,longPricesMap,shortPricesMap);
             createTransactions.oneLoop(selectedMarket);
         }
     }
