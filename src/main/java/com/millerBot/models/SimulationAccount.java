@@ -15,7 +15,7 @@ public class SimulationAccount {
 
     public void fillingMap(){
         MarketSummaries marketSummaries = new MarketSummaries();
-        for (Market market : marketSummaries.createSelectedMarketsList(20,150)){
+        for (Market market : marketSummaries.createSelectedMarketsList(80,150)){
             String marketTemp = market.getCurrency();
             acountStatus.put(marketTemp,0.0);
 

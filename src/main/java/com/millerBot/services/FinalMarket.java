@@ -10,7 +10,7 @@ public class FinalMarket {
 
     MarketSummaries marketSummaries;
     boolean trend = false;
-    String chosenPair ="";
+    String chosenPair = "";
     Market selectedMarket = null;
     List<Boolean> trendList = new ArrayList<>();
     Map<Market, List> trendMap = new HashMap<>();
@@ -20,17 +20,15 @@ public class FinalMarket {
     }
 
     public Market finalSelectedMarket(List<Market> marketList, MapContainer longPricesMap, MapContainer shortPricesMap) {
-
-        int step = 0;
-
         try {
-            Thread.sleep(5000);
-            while (selectedMarket == null) {
+            int step = 0;
+            while (selectedMarket == null || step < 20) {
+                Thread.sleep(5000);
                 step++;
                 addPrices(longPricesMap, shortPricesMap);
-                selectedMarket = selectMarket(marketList,step, longPricesMap, shortPricesMap);
+                selectedMarket = selectMarket(marketList, step, longPricesMap, shortPricesMap);
             }
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return selectedMarket;
@@ -61,10 +59,9 @@ public class FinalMarket {
                 trend = true;
                 trendMap.get(market).add(trend);
 
-            } else if (shortAverage > longAverage && trendMap.get(market).get(step - 1).equals(false) && length >= 20) {
+            } else if (shortAverage > longAverage ) {
                 trend = true;
                 trendMap.get(market).add(trend);
-                chosenPair = market.getName();
                 selectedMarket = market;
 
             } else {

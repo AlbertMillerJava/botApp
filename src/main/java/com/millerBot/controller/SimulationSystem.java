@@ -22,7 +22,7 @@ public class SimulationSystem {
     }
 
     public void mainLoop(){
-        List<Market> selectedMarketList = marketSummaries.createSelectedMarketsList(20,150);
+        List<Market> selectedMarketList = marketSummaries.createSelectedMarketsList(80,150);
 
         for(int i = 0 ; i<100 ;i++){
 

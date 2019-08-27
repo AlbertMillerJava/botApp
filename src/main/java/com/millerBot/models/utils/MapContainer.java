@@ -1,8 +1,13 @@
 package com.millerBot.models.utils;
+
 import com.millerBot.models.Market;
 import com.millerBot.services.MarketSummaries;
+import com.millerBot.services.Ticker;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.omg.CORBA.MARSHAL;
+
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,34 +27,20 @@ public class MapContainer {
     }
 
     public void fillMap() {
-        for (Market market :selectedMarketList) {
+        for (Market market : selectedMarketList) {
             pricesMap.put(market, new MovingAverage(limit));
         }
     }
 
 
     public void addingPriceToMap() {
-        String json = new MarketSummaries().getMarketSummary();
         double price = 0.0;
-        JSONObject jsObject = new JSONObject(json);
-        JSONArray array = jsObject.getJSONArray("result");
 
-        for (int i = 0; i < selectedMarketList.size(); i++) {
-
-            for (int n = 0; n < array.length(); n++) {
-
-                String marketName = array.getJSONObject(n).getString("MarketName");
-
-                if (selectedMarketList.get(i).getName().equals(marketName)) {
-
-                    price = array.getJSONObject(n).getDouble("Last");
-
-                    pricesMap.get(selectedMarketList.get(i)).addingPrice(price);
-                }
-
-            }
+        for (Market market : selectedMarketList) {
+            Ticker ticker = new Ticker(market);
+            price = ticker.getRate("Last");
+            pricesMap.get(market).addingPrice(price);
         }
-
     }
 
     public Map<Market, MovingAverage> getPricesMap() {
